@@ -1,6 +1,8 @@
 const express = require("express");
 const moment = require("moment");
 const request = require("request");
+const axios = require("axios");
+const bodyParser = require("body-parser");
 
 const app = express();
 
@@ -14,36 +16,18 @@ let startDate = moment()
 //end date
 let endDate = moment().format("YYYY-MM-DD");
 
-//get request to get data from api
-// app.get("/coinData", (req, res) => {
-//   axios
-//     .get(
-//       `https://api.coindesk.com/v1/bpi/historical/close.json?start=${startDate}&end=${endDate}`
-//       // `https://api.coindesk.com/v1/bpi/historical/close.json?start=2013-09-02&end=2013-09-05`
-//     )
-//     .then(res => {
-//       console.log("start", startDate);
-//       console.log("end", endDate);
-//       console.log("data", res.data.bpi);
-//       res.status(200).send(res.data);
-//     })
-//     .catch(err => {
-//       res.status(500).send(err);
-//     });
-// });
-
 app.get("/price", (req, res) => {
-  request(
-    `https://api.coindesk.com/v1/bpi/historical/close.json?start=${startDate}&end=${endDate}`,
-    (err, data) => {
-      if (err) {
-        res.send(err).status(500);
-        console.log(err);
-      } else {
-        res.send(data.body);
-      }
-    }
-  );
+  let data = [];
+  axios
+    .get(
+      `https://api.coindesk.com/v1/bpi/historical/close.json?start=${startDate}&end=${endDate}`
+    )
+    .then(result => {
+      data.push(Object.keys(result.data.bpi));
+      data.push(Object.values(result.data.bpi));
+      res.status(200).send(data);
+    })
+    .catch(err => res.status(400).send(err));
 });
 
 app.listen(3000, () => console.log("listening on port 3000!"));
