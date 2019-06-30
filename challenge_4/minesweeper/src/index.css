@@ -5,7 +5,65 @@ body {
 }
 
 .minesweeper {
-  width: 400px;
-  height: 400px;
+  width: 502px;
+  height: 615px;
+  border: 0.5px solid black;
+}
+
+.board {
+  width: 500px;
+  height: 500px;
   border: 1px solid black;
+}
+
+.board .rows {
+  display: flex;
+  height: 50px;
+}
+
+.board .rows:last-child {
+  border-bottom: none;
+  height: 50px;
+}
+
+.board .rows .cell {
+  border-right: 1px solid black;
+  width: 50px;
+  height: 50px;
+  justify-content: center;
+  align-items: center;
+  border-bottom: 1px solid black;
+}
+
+.board-top {
+  display: flex;
+  flex-direction: row;
+  height: 55px;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.reset,
+.flag-count,
+.timer {
+  width: 55px;
+  height: 35px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+.board .rows .cell.open {
+  background-color: rgba(184, 118, 118, 0.466);
+}
+.board .rows .cell.open:hover {
+  background-color: rgba(133, 42, 42, 0.466);
+}
+
+.board .rows .cell:hover {
+  background-color: rgb(109, 55, 55);
+}
+
+.board .rows .cell:last-child {
+  border-right: none;
 }
