@@ -42,29 +42,35 @@ export default class Board extends Component {
   };
 
   open = cell => {
-    let rows = this.state.rows;
-    let current = rows[cell.r][cell.c];
+    let asyncCountMines = new Promise(resolve => {
+      let mines = this.findMines(cell);
+      resolve(mines);
+    });
+    asyncCountMines.then(numberOfMines => {
+      let rows = this.state.rows;
+      let current = rows[cell.r][cell.c];
 
-    if (current.hasMine && this.props.openCells === 0) {
-      console.log("cell already has mine, restart");
-      let newRows = this.createBoard(this.props);
-      this.setState(
-        {
-          rows: newRows
-        },
-        () => {
-          this.open(cell);
+      if (current.hasMine && this.props.openCells === 0) {
+        console.log("cell already has mine, restart");
+        let newRows = this.createBoard(this.props);
+        this.setState(
+          {
+            rows: newRows
+          },
+          () => {
+            this.open(cell);
+          }
+        );
+      } else {
+        if (!cell.hasFlag && !current.open) {
+          this.props.openCellClick();
+
+          current.open = true;
+          current.count = numberOfMines;
+          this.setState({ rows });
         }
-      );
-    } else {
-      if (!cell.hasFlag && !current.open) {
-        this.props.openCellClick();
-
-        current.open = true;
-        current.count = mineCount;
-        this.setState({ rows });
       }
-    }
+    });
   };
 
   findMines = cell => {
